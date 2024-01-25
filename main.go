@@ -14,7 +14,7 @@ import (
 	//"k8s.io/client-go/util/homedir"
 	"fmt"
 
-	"github.com/vidya-ranganathan/mcluster/pkg/cumulonimbus.ai/v1alpha1"
+	"github.com/vidya-ranganathan/mcluster/pkg/apis/cumulonimbus.ai/v1alpha1"
 )
 
 func main() {
@@ -49,6 +49,7 @@ func main() {
 		fmt.Printf("listing klusters %d\n", len(klusters.Items))
 	*/
 
+	/* step #1 */
 	mc := v1alpha1.Mcluster{}
 	fmt.Println(mc)
 
