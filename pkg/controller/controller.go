@@ -8,6 +8,7 @@ import (
 	klientset "github.com/vidya-ranganathan/mcluster/pkg/client/clientset/versioned"
 	kinf "github.com/vidya-ranganathan/mcluster/pkg/client/informers/externalversions/cumulonimbus.ai/v1alpha1"
 	mclister "github.com/vidya-ranganathan/mcluster/pkg/client/listers/cumulonimbus.ai/v1alpha1"
+	"github.com/vidya-ranganathan/mcluster/pkg/todo"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
@@ -103,6 +104,9 @@ func (con *Controller) processNextItem() bool {
 	}
 
 	fmt.Printf("mcluster specs before performing the task is %+v\n", mcluster.Spec)
+
+	// perform the controller job here..
+	todo.Add(mcluster.Spec)
 
 	return true
 }
