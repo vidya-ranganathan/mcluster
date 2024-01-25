@@ -1,0 +1,6 @@
+apiVersion: cumulonimbus.ai/v1alpha1
+kind: Mcluster
+metadata:
+  name: k0
+spec:
+  name: k0
