@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/vidya-ranganathan/mcluster/pkg/apis/cumulonimbus.ai/v1alpha1"
-	//"github.com/vidya-ranganathan/mcluster/pkg/work"
+	"github.com/vidya-ranganathan/mcluster/pkg/work"
 )
 
 func Add(spec v1alpha1.MclusterSpec) {
@@ -19,14 +19,12 @@ func Add(spec v1alpha1.MclusterSpec) {
 		"name": spec.Name,
 	}
 
-	/*
-		// Call the PUT function
-		err := work.PutVerb(url, payload)
-		if err != nil {
-			fmt.Println("Error:", err)
-		}
-	*/
+	// Call the PUT function
+	err := work.PutVerb(url, payload)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 
-	fmt.Println(url)
-	fmt.Println(payload)
+	//fmt.Println(url)
+	//fmt.Println(payload)
 }
