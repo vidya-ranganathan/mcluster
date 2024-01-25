@@ -1,20 +1,14 @@
 package main
 
 import (
-	//"context"
-
-	"context"
-
-	klient "github.com/vidya-ranganathan/mcluster/pkg/client/clientset/versioned"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	//"k8s.io/client-go/rest"
-	//"k8s.io/client-go/tools/clientcmd"
-	//"k8s.io/client-go/util/homedir"
 	"flag"
-	"fmt"
 	"log"
 	"path/filepath"
+	"time"
+
+	klient "github.com/vidya-ranganathan/mcluster/pkg/client/clientset/versioned"
+	kInfFac "github.com/vidya-ranganathan/mcluster/pkg/client/informers/externalversions"
+	"github.com/vidya-ranganathan/mcluster/pkg/controller"
 
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -45,11 +39,21 @@ func main() {
 		log.Printf("getting klient set %s\n", err.Error())
 	}
 
+	/* step#1
 	mclusters, err := klientset.CumulonimbusV1alpha1().Mclusters("").List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		log.Printf("listing klusters - %s\n", err.Error())
 	}
 
 	fmt.Printf("listing klusters %d\n", len(mclusters.Items))
+	*/
+
+	infoFactory := kInfFac.NewSharedInformerFactory(klientset, 20*time.Minute)
+	ch := make(chan struct{})
+	con := controller.NewController(klientset, infoFactory.Cumulonimbus().V1alpha1().Mclusters())
+	infoFactory.Start(ch)
+	if err := con.Run(ch); err != nil {
+		log.Printf("error running controller %s\n", err.Error())
+	}
 
 }
