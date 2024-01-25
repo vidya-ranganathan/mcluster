@@ -8,7 +8,7 @@ import (
 	//"github.com/vidya-ranganathan/mcluster/pkg/work"
 )
 
-func Add(spec v1alpha1.Mclusterspec) {
+func Add(spec v1alpha1.MclusterSpec) {
 	log.Printf("Specs --> Cluster name %s\n", spec.Name)
 
 	// Build the URL
@@ -26,4 +26,7 @@ func Add(spec v1alpha1.Mclusterspec) {
 			fmt.Println("Error:", err)
 		}
 	*/
+
+	fmt.Println(url)
+	fmt.Println(payload)
 }

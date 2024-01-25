@@ -1,8 +1,8 @@
 module github.com/vidya-ranganathan/mcluster
 
-go 1.21
+go 1.20
 
-toolchain go1.21.6
+
 
 require (
 	k8s.io/apimachinery v0.29.1
