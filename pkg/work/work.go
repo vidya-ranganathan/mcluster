@@ -8,6 +8,8 @@ import (
 )
 
 func PutVerb(url string, payload map[string]interface{}) error {
+	fmt.Println("calling PutVerb")
+
 	// Convert payload to JSON
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {

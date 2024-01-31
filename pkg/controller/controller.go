@@ -58,6 +58,9 @@ func (con *Controller) Run(ch chan struct{}) error {
 		log.Println("cache was not sycned")
 	}
 
+	fmt.Println("worker#1..................")
+	go wait.Until(con.worker, time.Second, ch)
+	fmt.Println("worker#2..................")
 	go wait.Until(con.worker, time.Second, ch)
 
 	<-ch
