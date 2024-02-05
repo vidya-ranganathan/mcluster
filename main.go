@@ -15,6 +15,10 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
+
+	// EVENT_IMPORT_START
+	"k8s.io/client-go/kubernetes"
+	// EVENT_IMPORT_END
 )
 
 func main() {
@@ -50,9 +54,17 @@ func main() {
 	fmt.Printf("listing klusters %d\n", len(mclusters.Items))
 	*/
 
+	// EVENT_START
+	client, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		log.Printf("getting std client %s\n", err.Error())
+	}
+
+	// EVENT_END
+
 	infoFactory := kInfFac.NewSharedInformerFactory(klientset, 20*time.Minute)
 	ch := make(chan struct{})
-	con := controller.NewController(klientset, infoFactory.Cumulonimbus().V1alpha1().Mclusters())
+	con := controller.NewController(client, klientset, infoFactory.Cumulonimbus().V1alpha1().Mclusters())
 	infoFactory.Start(ch)
 	if err := con.Run(ch); err != nil {
 		log.Printf("error running controller %s\n", err.Error())
