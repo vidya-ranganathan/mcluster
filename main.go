@@ -1,3 +1,5 @@
+// @author : vidya.ranganathan@cumulonimbus.ai
+
 package main
 
 import (
@@ -27,7 +29,7 @@ func main() {
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
-		log.Printf("Building config from flags, %s", err.Error())
+		log.Printf("Building config from flags, %s - next trying to build with InClusterConfig()", err.Error())
 		config, err = rest.InClusterConfig()
 		if err != nil {
 			log.Printf("error %s building inclusterconfig", err.Error())
