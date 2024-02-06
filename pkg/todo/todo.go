@@ -14,19 +14,11 @@ func Add(spec v1alpha1.MclusterSpec) {
 	// Build the URL
 	url := fmt.Sprintf("http://localhost:8080/cluster/%s", spec.Name)
 
-	// Define the payload to be sent in the request body
-	payload := map[string]interface{}{
-		"name": spec.Name,
-	}
-
 	// Call the PUT function
-	err := work.PutVerb(url, payload)
+	err := work.PutVerb(url)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-
-	//fmt.Println(url)
-	//fmt.Println(payload)
 }
 
 func Delete(clusterName string) bool {
@@ -35,13 +27,8 @@ func Delete(clusterName string) bool {
 	// Build the URL
 	url := fmt.Sprintf("http://localhost:8080/cluster/%s", clusterName)
 
-	// Define the payload to be sent in the request body
-	payload := map[string]interface{}{
-		"name": clusterName,
-	}
-
 	// Call the DELETE function
-	err := work.DeleteVerb(url, payload)
+	err := work.DeleteVerb(url)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return false
