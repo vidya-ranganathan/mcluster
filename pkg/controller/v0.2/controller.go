@@ -23,12 +23,7 @@ import (
 	// "k8s.io/client-go/kubernetes/scheme"
 	typedcorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/client-go/tools/record"
-
 	// EVENT_IMPORTS_END
-
-	// DELETE_IMPORT_START
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	// DELETE_IMPORT_END
 )
 
 type Controller struct {
@@ -143,19 +138,10 @@ func (con *Controller) processNextItem() bool {
 
 	// get the CRD and its specs.
 	mcluster, err := con.mclister.Mclusters(ns).Get(name)
-	// DELETE_START
 	if err != nil {
-		if apierrors.IsNotFound(err) {
-			// Delete the KIND cluster with given name in the specification..
-			return todo.Delete(mcluster.Spec)
-		}
 		log.Printf("error %s getting the mcluster resource from lister\n", err.Error())
-		// EVENT_START - logging
-		con.recorder.Event(mcluster, corev1.EventTypeNormal, "KindClusterDelete", "KIND cluster deleted")
-		// EVENT_END
 		return false
 	}
-	// DELETE_END
 
 	fmt.Printf("mcluster specs before performing the task is %+v\n", mcluster.Spec)
 
