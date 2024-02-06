@@ -29,15 +29,15 @@ func Add(spec v1alpha1.MclusterSpec) {
 	//fmt.Println(payload)
 }
 
-func Delete(spec v1alpha1.MclusterSpec) bool {
-	log.Printf("Specs --> Cluster name %s\n", spec.Name)
+func Delete(clusterName string) bool {
+	log.Printf("Cluster name %s\n", clusterName)
 
 	// Build the URL
-	url := fmt.Sprintf("http://localhost:8080/cluster/%s", spec.Name)
+	url := fmt.Sprintf("http://localhost:8080/cluster/%s", clusterName)
 
 	// Define the payload to be sent in the request body
 	payload := map[string]interface{}{
-		"name": spec.Name,
+		"name": clusterName,
 	}
 
 	// Call the DELETE function
@@ -48,6 +48,4 @@ func Delete(spec v1alpha1.MclusterSpec) bool {
 	}
 
 	return true
-	//fmt.Println(url)
-	//fmt.Println(payload)
 }

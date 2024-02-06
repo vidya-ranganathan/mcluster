@@ -60,7 +60,7 @@ func DeleteVerb(url string, payload map[string]interface{}) error {
 	// Set the request headers
 	req.Header.Set("Content-Type", "application/json")
 
-	// Make the PUT request
+	// Make the DELETE request
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

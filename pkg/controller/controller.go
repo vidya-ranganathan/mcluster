@@ -147,11 +147,11 @@ func (con *Controller) processNextItem() bool {
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			// Delete the KIND cluster with given name in the specification..
-			return todo.Delete(mcluster.Spec)
+			return todo.Delete(name)
 		}
 		log.Printf("error %s getting the mcluster resource from lister\n", err.Error())
 		// EVENT_START - logging
-		con.recorder.Event(mcluster, corev1.EventTypeNormal, "KindClusterDelete", "KIND cluster deleted")
+		// con.recorder.Event(mcluster, corev1.EventTypeNormal, "KindClusterDelete", "KIND cluster deleted")
 		// EVENT_END
 		return false
 	}
