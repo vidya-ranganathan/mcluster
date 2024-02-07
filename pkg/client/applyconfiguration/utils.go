@@ -33,6 +33,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &cumulonimbusaiv1alpha1.MclusterApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MclusterSpec"):
 		return &cumulonimbusaiv1alpha1.MclusterSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MclusterStatus"):
+		return &cumulonimbusaiv1alpha1.MclusterStatusApplyConfiguration{}
 
 	}
 	return nil

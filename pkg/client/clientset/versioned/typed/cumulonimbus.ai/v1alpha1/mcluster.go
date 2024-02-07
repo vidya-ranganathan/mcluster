@@ -43,6 +43,7 @@ type MclustersGetter interface {
 type MclusterInterface interface {
 	Create(ctx context.Context, mcluster *v1alpha1.Mcluster, opts v1.CreateOptions) (*v1alpha1.Mcluster, error)
 	Update(ctx context.Context, mcluster *v1alpha1.Mcluster, opts v1.UpdateOptions) (*v1alpha1.Mcluster, error)
+	UpdateStatus(ctx context.Context, mcluster *v1alpha1.Mcluster, opts v1.UpdateOptions) (*v1alpha1.Mcluster, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.Mcluster, error)
@@ -50,6 +51,7 @@ type MclusterInterface interface {
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Mcluster, err error)
 	Apply(ctx context.Context, mcluster *cumulonimbusaiv1alpha1.MclusterApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.Mcluster, err error)
+	ApplyStatus(ctx context.Context, mcluster *cumulonimbusaiv1alpha1.MclusterApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.Mcluster, err error)
 	MclusterExpansion
 }
 
@@ -139,6 +141,22 @@ func (c *mclusters) Update(ctx context.Context, mcluster *v1alpha1.Mcluster, opt
 	return
 }
 
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *mclusters) UpdateStatus(ctx context.Context, mcluster *v1alpha1.Mcluster, opts v1.UpdateOptions) (result *v1alpha1.Mcluster, err error) {
+	result = &v1alpha1.Mcluster{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("mclusters").
+		Name(mcluster.Name).
+		SubResource("status").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(mcluster).
+		Do(ctx).
+		Into(result)
+	return
+}
+
 // Delete takes name of the mcluster and deletes it. Returns an error if one occurs.
 func (c *mclusters) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
@@ -200,6 +218,36 @@ func (c *mclusters) Apply(ctx context.Context, mcluster *cumulonimbusaiv1alpha1.
 		Namespace(c.ns).
 		Resource("mclusters").
 		Name(*name).
+		VersionedParams(&patchOpts, scheme.ParameterCodec).
+		Body(data).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *mclusters) ApplyStatus(ctx context.Context, mcluster *cumulonimbusaiv1alpha1.MclusterApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.Mcluster, err error) {
+	if mcluster == nil {
+		return nil, fmt.Errorf("mcluster provided to Apply must not be nil")
+	}
+	patchOpts := opts.ToPatchOptions()
+	data, err := json.Marshal(mcluster)
+	if err != nil {
+		return nil, err
+	}
+
+	name := mcluster.Name
+	if name == nil {
+		return nil, fmt.Errorf("mcluster.Name must be provided to Apply")
+	}
+
+	result = &v1alpha1.Mcluster{}
+	err = c.client.Patch(types.ApplyPatchType).
+		Namespace(c.ns).
+		Resource("mclusters").
+		Name(*name).
+		SubResource("status").
 		VersionedParams(&patchOpts, scheme.ParameterCodec).
 		Body(data).
 		Do(ctx).

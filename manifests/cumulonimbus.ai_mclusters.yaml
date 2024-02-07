@@ -40,6 +40,13 @@ spec:
               name:
                 type: string
             type: object
+          status:
+            properties:
+              clusterID:
+                type: string
+            type: object
         type: object
     served: true
     storage: true
+    subresources:
+      status: {}

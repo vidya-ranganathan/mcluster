@@ -1,10 +1,12 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
 
+	"github.com/vidya-ranganathan/mcluster/pkg/apis/cumulonimbus.ai/v1alpha1"
 	klientset "github.com/vidya-ranganathan/mcluster/pkg/client/clientset/versioned"
 	"github.com/vidya-ranganathan/mcluster/pkg/client/clientset/versioned/scheme"
 	kinf "github.com/vidya-ranganathan/mcluster/pkg/client/informers/externalversions/cumulonimbus.ai/v1alpha1"
@@ -29,6 +31,10 @@ import (
 	// DELETE_IMPORT_START
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	// DELETE_IMPORT_END
+
+	// STATUS_START
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	// STATUS_END
 )
 
 type Controller struct {
@@ -164,11 +170,32 @@ func (con *Controller) processNextItem() bool {
 	// EVENT_END
 
 	// perform the controller job here..
-	todo.Add(mcluster.Spec)
+	clusterID := todo.Add(mcluster.Spec)
+
+	// STATUS_START
+	err = con.updateStatus(clusterID, mcluster)
+	if err != nil {
+		log.Printf("error %s updating clustus status after creation of cluster", err.Error())
+	}
+	// STATUS_END
 
 	// EVENT_START - logging
 	con.recorder.Event(mcluster, corev1.EventTypeNormal, "KindClusterCreationComplete", "KIND cluster created")
 	// EVENT_END
 
 	return true
+}
+
+/* v0.4 adding status */
+func (con *Controller) updateStatus(clusterID string, mcluster *v1alpha1.Mcluster) error {
+	// get the latest version of mcluster
+	mc, err := con.klient.CumulonimbusV1alpha1().Mclusters(mcluster.Namespace).Get(context.Background(), mcluster.Name, metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+
+	// now update the status with clusterID
+	mc.Status.MclusterID = clusterID
+	_, err = con.klient.CumulonimbusV1alpha1().Mclusters(mcluster.Namespace).UpdateStatus(context.Background(), mc, metav1.UpdateOptions{})
+	return err
 }

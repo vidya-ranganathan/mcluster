@@ -104,6 +104,18 @@ func (c *FakeMclusters) Update(ctx context.Context, mcluster *v1alpha1.Mcluster,
 	return obj.(*v1alpha1.Mcluster), err
 }
 
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeMclusters) UpdateStatus(ctx context.Context, mcluster *v1alpha1.Mcluster, opts v1.UpdateOptions) (*v1alpha1.Mcluster, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(mclustersResource, "status", c.ns, mcluster), &v1alpha1.Mcluster{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Mcluster), err
+}
+
 // Delete takes name of the mcluster and deletes it. Returns an error if one occurs.
 func (c *FakeMclusters) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
@@ -146,6 +158,29 @@ func (c *FakeMclusters) Apply(ctx context.Context, mcluster *cumulonimbusaiv1alp
 	}
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(mclustersResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha1.Mcluster{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Mcluster), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeMclusters) ApplyStatus(ctx context.Context, mcluster *cumulonimbusaiv1alpha1.MclusterApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.Mcluster, err error) {
+	if mcluster == nil {
+		return nil, fmt.Errorf("mcluster provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(mcluster)
+	if err != nil {
+		return nil, err
+	}
+	name := mcluster.Name
+	if name == nil {
+		return nil, fmt.Errorf("mcluster.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(mclustersResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha1.Mcluster{})
 
 	if obj == nil {
 		return nil, err

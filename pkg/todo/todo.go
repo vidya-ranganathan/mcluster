@@ -8,7 +8,7 @@ import (
 	"github.com/vidya-ranganathan/mcluster/pkg/work"
 )
 
-func Add(spec v1alpha1.MclusterSpec) {
+func Add(spec v1alpha1.MclusterSpec) string {
 	log.Printf("Specs --> Cluster name %s\n", spec.Name)
 
 	// Build the URL
@@ -20,6 +20,7 @@ func Add(spec v1alpha1.MclusterSpec) {
 		fmt.Println("Error:", err)
 	}
 	fmt.Printf("PutVerb: Cluster created with ID =%s\n", clusterID)
+	return clusterID
 }
 
 func Delete(clusterName string) bool {
