@@ -7,11 +7,13 @@ import (
 	"net/http"
 )
 
-func PutVerb(url string) error {
+func PutVerb(url string) (string, error) {
+	clusterID := "N/A"
+
 	// Create a simple PUT request without a body
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
-		return fmt.Errorf("Error creating request: %v", err)
+		return clusterID, fmt.Errorf("Error creating request: %v", err)
 	}
 
 	// Set the request headers
@@ -21,7 +23,7 @@ func PutVerb(url string) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return fmt.Errorf("Error making request: %v", err)
+		return clusterID, fmt.Errorf("Error making request: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -29,27 +31,25 @@ func PutVerb(url string) error {
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			return fmt.Errorf("Error reading response body: %v", err)
+			return clusterID, fmt.Errorf("Error reading response body: %v", err)
 		}
 
 		var response map[string]interface{}
 		if err := json.Unmarshal(bodyBytes, &response); err != nil {
-			return fmt.Errorf("Error unmarshaling response JSON: %v", err)
+			return clusterID, fmt.Errorf("Error unmarshaling response JSON: %v", err)
 		}
 
+		var ok bool
 		// Assuming the server sends the clusterID in the response
-		if clusterID, ok := response["clusterID"].(string); ok {
-			fmt.Println("ClusterID:", clusterID)
-		} else {
-			return fmt.Errorf("clusterID not found in the response")
+		if clusterID, ok = response["clusterID"].(string); !ok {
+			return clusterID, fmt.Errorf("clusterID not found in the response")
 		}
 	} else {
 		fmt.Println("Response Status:", resp.Status)
 	}
 
-	// ToDo : return clusterID
-
-	return nil
+	// returning clusterID now..
+	return clusterID, nil
 }
 
 func DeleteVerb(url string) error {

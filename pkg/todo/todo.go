@@ -15,10 +15,11 @@ func Add(spec v1alpha1.MclusterSpec) {
 	url := fmt.Sprintf("http://localhost:8080/cluster/%s", spec.Name)
 
 	// Call the PUT function
-	err := work.PutVerb(url)
+	clusterID, err := work.PutVerb(url)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+	fmt.Printf("PutVerb: Cluster created with ID =%s\n", clusterID)
 }
 
 func Delete(clusterName string) bool {
